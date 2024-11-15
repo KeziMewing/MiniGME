@@ -1,0 +1,61 @@
+-- UI Setup
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local startButton = Instance.new("TextButton")
+startButton.Size = UDim2.new(0, 150, 0, 50)
+startButton.Position = UDim2.new(0.5, -75, 0.8, -25)
+startButton.Text = "Start Script"
+startButton.Parent = screenGui
+
+-- Flag to keep track of script activation
+local scriptActivated = false
+
+-- Script logic (triggered by button and re-run after reset)
+local function startScript(character)
+    if not scriptActivated then return end -- Prevent running if deactivated
+
+-- Enter Minigames
+    local args = {
+        [1] = "Enter",
+        [2] = "2021Avanza15CVT"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("NetworkContainer"):WaitForChild("RemoteEvents"):WaitForChild("Minigames"):FireServer(unpack(args))
+
+    wait()
+
+    -- Character Jump
+    local humanoid = character:WaitForChild("Humanoid")
+    local duration = 200 -- duration in seconds
+    local startTime = os.clock()
+
+    while os.clock() - startTime < duration do
+        if not scriptActivated then return end -- Stop if deactivated
+        humanoid.Jump = true
+        wait(0.5)
+    end
+end
+
+-- Handle character resets
+local function onCharacterAdded(character)
+    character:WaitForChild("HumanoidRootPart")
+    startScript(character)
+end
+
+-- Connect button to activate/deactivate script
+startButton.MouseButton1Click:Connect(function()
+    scriptActivated = not scriptActivated
+    startButton.Text = scriptActivated and "Stop Script" or "Start Script"
+    if scriptActivated and player.Character then
+        onCharacterAdded(player.Character)
+    end
+end)
+
+-- Monitor character respawns
+player.CharacterAdded:Connect(onCharacterAdded)
+
+-- Initial setup if the character exists
+if player.Character then
+    onCharacterAdded(player.Character)
+end
