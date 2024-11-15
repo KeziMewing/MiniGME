@@ -16,7 +16,13 @@ local scriptActivated = false
 local function startScript(character)
     if not scriptActivated then return end -- Prevent running if deactivated
 
--- Enter Minigames
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    vu:CaptureController()
+    vu:ClickButton2(Vector2.new())
+    end)
+
+    -- Enter Minigames
     local args = {
         [1] = "Enter",
         [2] = "2021Avanza15CVT"
