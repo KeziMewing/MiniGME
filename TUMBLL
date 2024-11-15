@@ -16,12 +16,6 @@ local scriptActivated = false
 local function startScript(character)
     if not scriptActivated then return end -- Prevent running if deactivated
 
-    local vu = game:GetService("VirtualUser")
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    vu:CaptureController()
-    vu:ClickButton2(Vector2.new())
-    end)
-
     -- Enter Minigames
     local args = {
         [1] = "Enter",
@@ -41,6 +35,15 @@ local function startScript(character)
         humanoid.Jump = true
         wait(0.5)
     end
+
+    wait(20)
+
+    -- Anti AFK
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    vu:CaptureController()
+    vu:ClickButton2(Vector2.new())
+    end)
 end
 
 -- Handle character resets
