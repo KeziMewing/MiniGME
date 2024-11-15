@@ -13,11 +13,6 @@ startButton.Parent = screenGui
 local scriptActivated = false
 
 -- Script logic (triggered by button and re-run after reset)
-local vu = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    vu:CaptureController()
-    vu:ClickButton2(Vector2.new())
-end)
 
 local function startScript(character)
     if not scriptActivated then return end -- Prevent running if deactivated
@@ -28,6 +23,14 @@ local function startScript(character)
         [2] = "2021Avanza15CVT"
     }
     game:GetService("ReplicatedStorage"):WaitForChild("NetworkContainer"):WaitForChild("RemoteEvents"):WaitForChild("Minigames"):FireServer(unpack(args))
+
+    wait(20)
+
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    vu:CaptureController()
+    vu:ClickButton2(Vector2.new())
+    end)
 end
 
 -- Handle character resets
